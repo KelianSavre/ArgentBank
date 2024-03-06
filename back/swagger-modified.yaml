@@ -1,0 +1,588 @@
+
+"swagger": "2.0"
+"info":
+  "title": "Bank Argent API documentation"
+  "description": "Contains all available API endpoints in this codebase"
+  "version": "1.0.0"
+  "termsOfService": "http://swagger.io/terms/"
+"host": "localhost:3001"
+"basePath": "/api/v1"
+"schemes":
+  - "http"
+"paths":
+  "/user/login":
+    "post":
+      "tags":
+        - "User Module"
+      "summary": "Login"
+      "description": "API for Login"
+      "parameters":
+        -
+          "in": "body"
+          "name": "body"
+          "description": "Login Payload"
+          "required": true
+          "schema":
+            "properties":
+              "email":
+                "type": "string"
+                "description": "user email"
+              "password":
+                "type": "string"
+                "description": "user password"
+      "produces":
+        - "application/json"
+      "responses":
+        "200":
+          "description": "Login Successfully"
+          "schema":
+            "type": "object"
+            "properties":
+              "token":
+                "type": "string"
+        "400":
+          "description": "Invalid Fields"
+        "500":
+          "description": "Internal Server Error"
+  "/user/signup":
+    "post":
+      "tags":
+        - "User Module"
+      "summary": "Signup"
+      "description": "API for Signup"
+      "parameters":
+        -
+          "in": "body"
+          "name": "body"
+          "description": "Signup Payload"
+          "required": true
+          "schema":
+            "properties":
+              "email":
+                "type": "string"
+                "description": "user email"
+              "password":
+                "type": "string"
+                "description": "user password"
+              "firstName":
+                "type": "string"
+                "description": "user first name"
+              "lastName":
+                "type": "string"
+                "description": "user last name"
+              "userName":
+                "type": "string"
+                "description": "user public name"
+      "produces":
+        - "application/json"
+      "responses":
+        "200":
+          "description": "Signup Successfully"
+          "schema":
+            "type": "object"
+            "properties":
+              "status":
+                "type": "integer"
+              "message":
+                "type": "string"
+              "body":
+                "type": "object"
+                "properties":
+                  "id":
+                    "type": "string"
+                  "email":
+                    "type": "string"
+        "400":
+          "description": "Invalid Fields"
+        "500":
+          "description": "Internal Server Error"
+  "/user/profile":
+    "post":
+      "security":
+        -
+          "Bearer": []
+      "tags":
+        - "User Module"
+      "summary": "Get User Profile"
+      "description": "API for fetching a user profile"
+      "responses":
+        "200":
+          "description": "User profile retrieved successully"
+          "schema":
+            "type": "object"
+            "properties":
+              "status":
+                "type": "integer"
+              "message":
+                "type": "string"
+              "body":
+                "type": "object"
+                "properties":
+                  "id":
+                    "type": "string"
+                  "email":
+                    "type": "string"
+        "400":
+          "description": "Invalid Fields"
+        "500":
+          "description": "Internal Server Error"
+    "put":
+      "security":
+        -
+          "Bearer": []
+      "tags":
+        - "User Module"
+      "summary": "Update User Profile"
+      "description": "API for updating a user profile"
+      "parameters":
+        -
+          "in": "body"
+          "name": "body"
+          "description": "Update user profile attributes"
+          "required": true
+          "schema":
+            "type": "object"
+            "properties":
+              "userName":
+                "type": "string"
+      "produces":
+        - "application/json"
+      "responses":
+        "200":
+          "description": "User profile retrieved successully"
+          "schema":
+            "type": "object"
+            "properties":
+              "status":
+                "type": "integer"
+              "message":
+                "type": "string"
+              "body":
+                "type": "object"
+                "properties":
+                  "id":
+                    "type": "string"
+                  "email":
+                    "type": "string"
+        "400":
+          "description": "Invalid Fields"
+        "500":
+          "description": "Internal Server Error"
+  "/transaction/{userID}/bankdetails":
+    "get":
+      "security":
+        -
+          "Bearer": []
+      "tags":
+        - "Transaction Module"
+      "summary": "Get User Balance"
+      "description": "Get user's Bank Details"
+      "parameters":
+        -
+          "name": "userID"
+          "in": "path"
+          "required": true
+          "description": "ID of the user"
+          "type": "string"
+      "responses":
+        "200":
+          "description": "User Balance retrieved successfully"
+          "schema":
+            "properties":
+              "TotalBalance":
+                "type": "number"
+                "format": "decimal"
+                "example": 48098.43
+              "Accounts":
+                "type": "array"
+                "items":
+                  "type": "object"
+                  "properties":
+                    "AccountID":
+                      "type": "integer"
+                      "description": "ID of the account"
+                    "AccountBalance":
+                      "type": "number"
+                      "format": "decimal"
+                      "description": "balance of the account"
+                      "example": 297.99
+                    "AccountName":
+                      "type": "string"
+                      "description": "Name of the account"
+                      "example": "Argent Bank Checking (x3448)"
+                      
+        "401":
+          "description": "Unauthorized Access"
+        "404":
+          "description": "User not Found"
+        "500":
+          "description": "Internal Server Error"
+  "/transaction/{userID}/get-current-month":
+    "get":
+      "security":
+        -
+          "Bearer": []
+      "tags":
+        - "Transaction Module"
+      "summary": "Fetch User monthly transaction"
+      "description": "Get user's current month transaction details"
+      "parameters":
+        -
+          "name": "userID"
+          "in": "path"
+          "required": true
+          "description": "ID of the user"
+          "type": "string"
+      "responses":
+        "200":
+          "description": "User monthly transaction details retrieved successfully"
+          "schema":
+            "type": "array"
+            "items":
+              "type": "object"
+              "properties":
+                "transactionID":
+                  "type": "integer"
+                  "format": "int64"
+                  "description": "ID of transaction"
+                  "example": 1
+                "transactionTransceiver":
+                  "type": "string"
+                  "description": "Receiver/Sender of transaction"
+                  "example": "Golden Sun Bakery"
+                "transactionDate":
+                  "type": "string"
+                  "description": "Date of transaction"
+                  "format": "date-time"
+                "transactionAmount":
+                  "type": "number"
+                  "format": "decimal"
+                  "example": 8.99
+        "401":
+          "description": "Unauthorized Access"
+        "404":
+          "description": "User not Found"
+        "500":
+          "description": "Internal Server Error"
+  "/transaction/{userID}/{transactionID}":
+    "get":
+      "security":
+        -
+          "Bearer": []
+      "tags":
+        - "Transaction Module"
+      "summary": "Fetch Transaction Detail"
+      "description": "Get user's selected transaction's details"
+      "parameters":
+        -
+          "name": "userID"
+          "in": "path"
+          "required": true
+          "description": "ID of the user"
+          "type": "string"
+        -
+          "name": "transactionID"
+          "in": "path"
+          "required": true
+          "description": "ID of transaction"
+          "type": "integer"
+      "responses":
+        "200":
+          "description": "User monthly transaction details retrieved successfully"
+          "schema":
+            "type": "object"
+            "properties":
+                "transactionType":
+                  "type": "string"
+                  "description": "Type of transaction"
+                  "example": "Electronic"
+                "transactionCategory":
+                  "type": "string"
+                  "description": "Category of transaction"
+                  "example": "Food"
+                "transactionNote":
+                  "type": "array"
+                  "items":
+                      "type": "object"
+                      "properties":
+                        "Note":
+                          "type": "string"
+                          "description": "Note of transaction (should be empty by default)"
+                          "example": "Note"
+                        "NoteID":
+                            "type": "integer"
+                            "description": "ID of the Note"
+        "401":
+          "description": "Unauthorized Access"
+        "404":
+          "description": "Transaction not Found"
+        "500":
+          "description": "Internal Server Error"
+  "/transaction/{userID}/{transactionID}/note":
+    "post":
+      "security":
+        -
+          "Bearer": []
+      "tags":
+        - "Transaction Module"
+      "summary": "Post Transaction Notes"
+      "description": "Add Transaction Notes in selected transaction"
+      "parameters":
+        -
+          "name": "userID"
+          "in": "path"
+          "required": true
+          "description": "ID of the user"
+          "type": "string"
+        -
+          "name": "transactionID"
+          "in": "path"
+          "required": true
+          "description": "ID of transaction"
+          "type": "integer"
+        -
+          "name": "noteContent"
+          "in": "body"
+          "description": "Content of the Transaction note"
+          "required": true
+          "schema":
+            "type": "object"
+            "properties":
+              "noteContent":
+                "type": "string"
+                "description": "content for the note"
+      "responses":
+        "200":
+          "description": "User's transaction notes added successfully"
+          "schema":
+            "type": "object"
+            "properties":
+              "note":
+                "type": "string"
+                "description": "Note of transaction"
+              "noteID":
+                "type": "integer"
+                "description": "ID of the note"
+        "401":
+          "description": "Unauthorized Access"
+        "404":
+          "description": "Transaction not Found"
+        "500":
+          "description": "Internal Server Error"
+  "/transaction/{userID}/{transactionID}/note/{noteID}":
+    "put":
+      "security":
+        -
+          "Bearer": []
+      "tags":
+        - "Transaction Module"
+      "summary": "Modify Transaction Notes"
+      "description": "Modify Transaction Notes for selected transaction"
+      "parameters":
+        -
+          "name": "userID"
+          "in": "path"
+          "required": true
+          "description": "ID of the user"
+          "type": "string"
+        -
+          "name": "transactionID"
+          "in": "path"
+          "required": true
+          "description": "ID of transaction"
+          "type": "integer"
+        -
+          "name": "noteID"
+          "type": "integer"
+          "in": "path"
+          "description": "ID of the note"
+          "required": true
+        -
+          "name": "noteContent"
+          "in": "body"
+          "description": "Content of the Modified Transaction note"
+          "required": true
+          "schema":
+            "type": "object"
+            "properties":
+              "noteContent":
+                "type": "string"
+                "description": "content for the note"
+      "responses":
+        "200":
+          "description": "User's transaction notes modified successfully"
+          "schema":
+            "type": "object"
+            "properties":
+              "note":
+                "type": "string"
+                "description": "Note of transaction"
+              "noteID":
+                "type": "integer"
+                "description": "ID of the note"
+        "401":
+          "description": "Unauthorized Access"
+        "404":
+          "description": "Note not Found"
+        "500":
+          "description": "Internal Server Error"
+    "delete":
+      "security":
+        -
+          "Bearer": []
+      "tags":
+        - "Transaction Module"
+      "summary": "Delete Transaction Notes"
+      "description": "Remove Transaction Notes in selected transaction"
+      "parameters":
+        -
+          "name": "userID"
+          "in": "path"
+          "required": true
+          "description": "ID of the user"
+          "type": "string"
+        -
+          "name": "transactionID"
+          "in": "path"
+          "required": true
+          "description": "ID of transaction"
+          "type": "integer"
+        -
+          "name": "noteID"
+          "type": "integer"
+          "in": "path"
+          "description": "ID of the note"
+          "required": true
+      "responses":
+        "200":
+          "description": "Transaction notes deleted successfully"
+        "401":
+          "description": "Unauthorized Access"
+        "404":
+          "description": "Note not Found"
+        "500":
+          "description": "Internal Server Error"
+"securityDefinitions":
+  "Bearer":
+    "type": "apiKey"
+    "name": "Authorization"
+    "in": "header"
+"definitions":
+  "User":
+    "properties":
+      "email":
+        "type": "string"
+        "description": "user email"
+      "password":
+        "type": "string"
+        "description": "user password"
+      "firstName":
+        "type": "string"
+        "description": "user first name"
+      "lastName":
+        "type": "string"
+        "description": "user last name"
+      "userName":
+        "type": "string"
+        "description": "user public name"
+  "Login":
+    "properties":
+      "email":
+        "type": "string"
+        "description": "user email"
+      "password":
+        "type": "string"
+        "description": "user password"
+  "ApiResponse":
+    "type": "object"
+    "properties":
+      "status":
+        "type": "integer"
+      "message":
+        "type": "string"
+      "body":
+        "type": "object"
+        "properties":
+          "id":
+            "type": "string"
+          "email":
+            "type": "string"
+  "LoginResponse":
+    "type": "object"
+    "properties":
+      "token":
+        "type": "string"
+  "UserProfile":
+    "type": "object"
+    "properties":
+      "userName":
+        "type": "string"
+  "UserBankDetails":
+    "properties":
+      "TotalBalance":
+        "type": "number"
+        "format": "decimal"
+        "example": 48098.43
+      "Accounts":
+        "type": "array"
+        "items":
+          "type": "object"
+          "properties":
+            "AccountID":
+              "type": "integer"
+              "description": "ID of the account"
+            "AccountBalance":
+              "type": "number"
+              "format": "decimal"
+              "description": "balance of the account"
+              "example": 297.99
+  "TransactionMonthly":
+    "type": "object"
+    "properties":
+      "transactionID":
+        "type": "integer"
+        "format": "int64"
+        "description": "ID of transaction"
+        "example": 1
+      "transactionTransceiver":
+        "type": "string"
+        "description": "Receiver/Sender of transaction"
+        "example": "Golden Sun Bakery"
+      "transactionDate":
+        "type": "string"
+        "description": "Date of transaction"
+        "format": "date-time"
+      "transactionAmount":
+        "type": "number"
+        "format": "decimal"
+        "example": 8.99
+  "TransactionDetails":
+    "type": "object"
+    "properties":
+      "transactionType":
+        "type": "string"
+        "description": "Type of transaction"
+        "example": "Electronic"
+      "transactionCategory":
+        "type": "string"
+        "description": "Category of transaction"
+        "example": "Food"
+      "transactionNote":
+        "type": "string"
+        "description": "Note of transaction (should be empty by default)"
+        "example": "Note"
+  "PostNote":
+    "type": "object"
+    "properties":
+      "noteContent":
+        "type": "string"
+        "description": "content for the note"
+  "ResponseNote":
+    "type": "object"
+    "properties":
+      "note":
+        "type": "string"
+        "description": "Note of transaction"
+      "noteID":
+        "type": "integer"
+        "description": "ID of the note"
